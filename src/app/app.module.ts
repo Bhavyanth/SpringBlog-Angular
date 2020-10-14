@@ -25,7 +25,8 @@ import { EditorModule } from '@tinymce/tinymce-angular';
 import { ViewPostComponent } from './post/view-post/view-post.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserProfileComponent } from './auth/user-profile/user-profile.component';
-
+import { NgxSpinnerModule } from "ngx-spinner";
+import { CKEditorModule } from 'ng2-ckeditor';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,8 @@ import { UserProfileComponent } from './auth/user-profile/user-profile.component
     ToastrModule.forRoot(),
     FontAwesomeModule,
     EditorModule,
+    NgxSpinnerModule,
+    CKEditorModule,
     NgbModule
   ],
   providers: [

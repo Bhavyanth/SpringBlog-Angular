@@ -4,6 +4,7 @@ import { SignupRequestPayload } from './singup-request.payload';
 import { AuthService } from '../shared/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-signup',
@@ -16,7 +17,7 @@ export class SignupComponent implements OnInit {
   signupForm: FormGroup;
 
   constructor(private authService: AuthService, private router: Router,
-    private toastr: ToastrService) {
+    private toastr: ToastrService, private spinner:NgxSpinnerService) {
     this.signupRequestPayload = {
       username: '',
       email: '',
@@ -33,6 +34,7 @@ export class SignupComponent implements OnInit {
   }
 
   signup() {
+    this.spinner.show();
     this.signupRequestPayload.email = this.signupForm.get('email').value;
     this.signupRequestPayload.username = this.signupForm.get('username').value;
     this.signupRequestPayload.password = this.signupForm.get('password').value;
@@ -41,8 +43,9 @@ export class SignupComponent implements OnInit {
       .subscribe(data => {
         this.router.navigate(['/login'],
           { queryParams: { registered: 'true' } });
+          this.spinner.hide();
       }, error => {
-        console.log(error);
+        this.spinner.hide();
         this.toastr.error('Registration Failed! Please try again');
       });
   }

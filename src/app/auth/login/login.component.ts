@@ -5,6 +5,7 @@ import { AuthService } from '../shared/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { throwError } from 'rxjs';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,7 @@ export class LoginComponent implements OnInit {
   isError: boolean;
 
   constructor(private authService: AuthService, private activatedRoute: ActivatedRoute,
-    private router: Router, private toastr: ToastrService) {
+    private router: Router, private toastr: ToastrService, private spinner:NgxSpinnerService) {
     this.loginRequestPayload = {
       username: '',
       password: ''
@@ -36,23 +37,24 @@ export class LoginComponent implements OnInit {
       .subscribe(params => {
         if (params.registered !== undefined && params.registered === 'true') {
           this.toastr.success('Signup Successful');
-          this.registerSuccessMessage = 'Please Check your inbox for activation email '
-            + 'activate your account before you Login!';
+          this.toastr.info('Please check your inbox for activation link');
         }
       });
   }
 
   login() {
+    this.spinner.show();
     this.loginRequestPayload.username = this.loginForm.get('username').value;
     this.loginRequestPayload.password = this.loginForm.get('password').value;
-
     this.authService.login(this.loginRequestPayload).subscribe(data => {
       this.isError = false;
       this.router.navigateByUrl('');
-      this.toastr.success('Login Successful');
+      this.toastr.success('Login Success');
+      this.spinner.hide();
     }, error => {
       this.isError = true;
-      throwError(error);
+      this.toastr.error('Login error');
+      this.spinner.hide();
     });
   }
 
